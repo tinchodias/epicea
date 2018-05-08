@@ -21,20 +21,20 @@ BaselineOfEpicea >> baseline: spec [
 
             spec 
                 package: 'Ombu';
-                package: 'OmbuTests' with: [
+                package: 'Ombu-Tests' with: [
                     spec requires: #(Ombu) ];
                 package: 'Epicea' with: [
                     spec requires: #(Ombu) ];
-                package: 'EpiceaBrowsers' with: [
+                package: 'Epicea-Browsers' with: [
                     spec requires: #(Epicea Hiedra) ];
-                package: 'EpiceaTests' with: [
+                package: 'Epicea-Tests' with: [
                     spec requires: #(Epicea) ];
-                package: 'EpiceaBrowsersTests' with: [
-                    spec requires: #(EpiceaBrowsers EpiceaTests) ].
+                package: 'Epicea-Browsers-Tests' with: [
+                    spec requires: #(Epicea-Browsers Epicea-Tests) ].
 
             spec 
-                group: 'core' with: #(Ombu Epicea EpiceaBrowsers Hiedra);
-                group: 'core+tests' with: #(OmbuTests EpiceaTests EpiceaBrowsersTests);
+                group: 'core' with: #(Ombu Epicea Epicea-Browsers Hiedra);
+                group: 'core+tests' with: #(Ombu-Tests Epicea-Tests Epicea-Browsers-Tests);
 				group: 'default' with: #('core+tests')
   			].
         ]

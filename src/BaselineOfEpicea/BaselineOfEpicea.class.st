@@ -15,7 +15,7 @@ BaselineOfEpicea >> baseline: spec [
 		            baseline: 'Hiedra'
 		            with: [
 			            spec
-				            repository: 'github://tinchodias/hiedra:master';
+				            repository: 'github://tinchodias/hiedra:master/src';
               				loads: 'default' ]
             ].
 
@@ -30,12 +30,11 @@ BaselineOfEpicea >> baseline: spec [
                 package: 'Epicea-Tests' with: [
                     spec requires: #(Epicea) ];
                 package: 'Epicea-Browsers-Tests' with: [
-                    spec requires: #(Epicea-Browsers Epicea-Tests) ].
+                    spec requires: #('Epicea-Browsers' 'Epicea-Tests') ].
 
             spec
-                group: 'core' with: #(Ombu Epicea Epicea-Browsers Hiedra);
-                group: 'core+tests' with: #(Ombu-Tests Epicea-Tests Epicea-Browsers-Tests);
-				group: 'default' with: #('core+tests')
-  			].
+                group: 'core' with: #(Ombu Epicea 'Epicea-Browsers' Hiedra);
+                group: 'core+tests' with: #('Ombu-Tests' 'Epicea-Tests' 'Epicea-Browsers-Tests');
+		group: 'default' with: #('core+tests')
         ]
 ]

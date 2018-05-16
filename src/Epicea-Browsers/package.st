@@ -1,1 +1,1 @@
-Package { #name : #Epicea-Browsers }
+Package { #name : #'Epicea-Browsers' }

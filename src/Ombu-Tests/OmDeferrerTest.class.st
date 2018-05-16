@@ -8,7 +8,7 @@ Class {
 		'count',
 		'deferrer'
 	],
-	#category : #Ombu-Tests
+	#category : #'Ombu-Tests'
 }
 
 { #category : #accessing }

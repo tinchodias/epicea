@@ -4,7 +4,7 @@ An OmRandomSuffixStrategyTest is a test class for testing the behavior of OmRand
 Class {
 	#name : #OmRandomSuffixStrategyTest,
 	#superclass : #OmSessionStoreNameStrategyTest,
-	#category : #Ombu-Tests
+	#category : #'Ombu-Tests'
 }
 
 { #category : #tests }

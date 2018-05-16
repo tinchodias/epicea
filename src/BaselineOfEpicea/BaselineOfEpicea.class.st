@@ -1,7 +1,7 @@
 Class {
 	#name : #BaselineOfEpicea,
 	#superclass : #BaselineOf,
-	#category : 'BaselineOfEpicea'
+	#category : #BaselineOfEpicea
 }
 
 { #category : #baseline }
@@ -9,17 +9,17 @@ BaselineOfEpicea >> baseline: spec [
 	<baseline>
 	spec
 		for: #pharo
-		do: [ 
-            spec project: 'Hiedra' with: [ 
-            	spec 
-		            baseline: 'Hiedra' 
-		            with: [ 
+		do: [
+            spec project: 'Hiedra' with: [
+            	spec
+		            baseline: 'Hiedra'
+		            with: [
 			            spec
 				            repository: 'github://tinchodias/hiedra:master';
               				loads: 'default' ]
             ].
 
-            spec 
+            spec
                 package: 'Ombu';
                 package: 'Ombu-Tests' with: [
                     spec requires: #(Ombu) ];
@@ -32,7 +32,7 @@ BaselineOfEpicea >> baseline: spec [
                 package: 'Epicea-Browsers-Tests' with: [
                     spec requires: #(Epicea-Browsers Epicea-Tests) ].
 
-            spec 
+            spec
                 group: 'core' with: #(Ombu Epicea Epicea-Browsers Hiedra);
                 group: 'core+tests' with: #(Ombu-Tests Epicea-Tests Epicea-Browsers-Tests);
 				group: 'default' with: #('core+tests')

@@ -12,7 +12,7 @@ BaselineOfEpicea >> baseline: spec [
 		do: [ spec
 				baseline: 'Hiedra'
 				with: [ spec
-						repository: 'github://tinchodias/hiedra:master/src';
+						repository: 'github://tinchodias/hiedra:v1.0.0/src';
 						loads: 'default' ].
 			spec
 				package: 'Ombu';

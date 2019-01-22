@@ -6,6 +6,11 @@ Epicea extends and could replace the traditional **.changes** logging mechanism,
 
 Epicea has a small subproject, named **Ombu**, which provides simple persistence. By default, Ombu uses [STON](http://smalltalkhub.com/#!/~SvenVanCaekenberghe/STON) to write the events when they are announced in the system. STON is part of Pharo 5.0.
 
+:warning:
+OUTDATED: The latest version this project is located inside [Pharo repository](https://github.com/pharo-project/pharo).
+:warning:
+
+
 ## Install it
 
 Note this project is already part of Pharo 6 and 7. However, if you need to install it in some situation, the script to do it is:

@@ -28,6 +28,10 @@ Note this project is already part of Pharo 6 and 7. However, if you need to inst
 - To browse the recorded logs, click on `World menu > Tools > Code Changes`
 - To browse any **.ombu** file with a log, you can simply drag&drop it from your file browser (e.g. Finder in Mac) into the image.
 
+## License
+
+The code is licensed under [MIT](LICENSE).
+
 ## More info
 
 **Publications**

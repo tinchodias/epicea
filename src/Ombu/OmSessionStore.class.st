@@ -8,7 +8,6 @@ Class {
 		'currentSession',
 		'currentImagePathString',
 		'currentStore',
-		'alternativeStore',
 		'baseLocator',
 		'announcer',
 		'writingDeferDuration',
@@ -17,7 +16,8 @@ Class {
 	],
 	#classInstVars : [
 		'storeNameStrategy',
-		'defaultBaseLocator'
+		'defaultBaseLocator',
+		'registry'
 	],
 	#category : #'Ombu-Stores'
 }
@@ -40,7 +40,9 @@ OmSessionStore class >> initialize [
 	"
 	self initialize
 	"
-	SessionManager default registerUserClassNamed: self name
+	registry := WeakSet new: 5.
+	SessionManager default registerUserClassNamed: self name.
+
 
 ]
 
@@ -58,11 +60,16 @@ OmSessionStore class >> newWithBaseLocator: aBaseDirectory [
 		yourself
 ]
 
-{ #category : #'system startup' }
-OmSessionStore class >> startUp [
-	"The #store accessor refreshes each instance since it will discover that the Session changed"
+{ #category : #initialization }
+OmSessionStore class >> register: aSessionStore [
 
-	self allInstancesDo: #store 
+	registry add: aSessionStore 
+]
+
+{ #category : #initialization }
+OmSessionStore class >> startUp [ 
+
+	registry do: [ :each | each store ]
 ]
 
 { #category : #accessing }
@@ -146,7 +153,7 @@ OmSessionStore >> headReference [
 OmSessionStore >> imagePathString [
 	"Answer the full path name for the current image."
 
-	^ SmalltalkImage current primImagePath
+	^ SmalltalkImage current imagePath
 ]
 
 { #category : #initialization }
@@ -157,6 +164,8 @@ OmSessionStore >> initializeWithBaseLocator: aDirectoryFileLocator [
 	baseLocator := aDirectoryFileLocator.
 	self store. "Force initialization"
 	headReference := self store headReference.
+	
+	self class register: self.
 
 ]
 
@@ -210,26 +219,21 @@ OmSessionStore >> resetWithNextStoreName [
 
 { #category : #accessing }
 OmSessionStore >> resetWithStoreNamed: newName [
-
-	| fileReference |
 	"First, ensure file is not already used."
-	fileReference := OmFileStore 
-		fileReferenceForStoreNamed: newName
-		inDirectory: self directory.
-	fileReference exists ifTrue: [
-		FileExists signalWith: fileReference ].
-	
+
+	(OmFileStore fileReferenceForStoreNamed: newName inDirectory: self directory)
+		ifExists: [ :fileReference | FileExists signalWith: fileReference ].
+
+	self directory fileSystem isWritable ifFalse: [ ^ self ].
+
 	"Then, we can proceed."
 	currentSession := Smalltalk session.
 	currentImagePathString := self imagePathString.
-	currentStore := 
-		OmStoreFactory current
-			named: newName
-			inDirectory: self directory ensureCreateDirectory.
+	currentStore := OmStoreFactory current named: newName inDirectory: self directory ensureCreateDirectory.
 	currentStore writingDeferDuration: self writingDeferDuration.
-	
+
 	"Announce"
-	self announcer announce: OmSessionStoreUpdated new.
+	self announcer announce: OmSessionStoreUpdated new
 ]
 
 { #category : #accessing }

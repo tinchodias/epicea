@@ -1,5 +1,5 @@
 "
-An EpDeferrerTest is a test class for testing the behavior of EpDeferrer
+An EpDeferrerTest is a test class for testing the behavior of OmDeferrer
 "
 Class {
 	#name : #OmDeferrerTest,
@@ -32,6 +32,8 @@ OmDeferrerTest >> increase [
 { #category : #tests }
 OmDeferrerTest >> testExecuteOnceAfterScheduling [
 
+	self skipOnPharoCITestingEnvironment.
+
 	self count: 0.
 	deferrer := OmDeferrer 
 		send: #increase
@@ -45,25 +47,9 @@ OmDeferrerTest >> testExecuteOnceAfterScheduling [
 ]
 
 { #category : #tests }
-OmDeferrerTest >> testExecuteOnceAfterSchedulingMultipleTimes [
-
-	self count: 0.
-	deferrer := OmDeferrer 
-		send: #increase
-		to: self
-		after: 250 milliSeconds.
-
-	3 timesRepeat: [	
-		deferrer schedule.
-		(Delay forMilliseconds: 50) wait ].
-	
-	(Delay forMilliseconds: 350) wait.
-	
-	self assert: self count equals: 1.
-]
-
-{ #category : #tests }
 OmDeferrerTest >> testExecuteWithoutDelay [
+
+	self skipOnPharoCITestingEnvironment.
 
 	self count: 0.
 	deferrer := OmDeferrer 

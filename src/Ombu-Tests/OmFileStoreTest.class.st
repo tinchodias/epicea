@@ -5,12 +5,6 @@ Class {
 }
 
 { #category : #resources }
-OmFileStoreTest >> directoryForTests [
-
-	^ FileSystem workingDirectory
-]
-
-{ #category : #resources }
 OmFileStoreTest >> setUpOtherStore [
 
 	^ OmFileStore 
@@ -56,11 +50,19 @@ OmFileStoreTest >> testEnsureDeleteFile [
 { #category : #tests }
 OmFileStoreTest >> testIsOutdated [
 
+	| copy |
 	self deny: store isOutdated.
 	store newEntry: (OmEntry content: 42).
 	self deny: store isOutdated.
 	store flush.
 	self deny: store isOutdated.
+	copy := store copyReopened refresh.
+	store newEntry: (OmEntry content: 43).
+	store flush.
+	"A store is outdated if the file exists and has greater size than in memory."
+	self assert: copy isOutdated.
+	store ensureDeleteFile.
+	self deny: copy isOutdated.
 
 ]
 
@@ -133,21 +135,21 @@ OmFileStoreTest >> testLoadFromCorruptFile3 [
 OmFileStoreTest >> testLoadFromCorruptFile4 [
 	"Content is corrupted"
 
-	| loadedStore |
+	| loadedStore stream |
 	store newEntry: (OmEntry content: 41).
 	store newEntry: (OmEntry content: 42).
 	store flush.
 	
 	"Override first characters"
-	store fileReference writeStreamDo: [ :stream | 
-		stream 
-			upToAll: '41';
-			skip: -1;
+	stream := store fileReference binaryWriteStream.
+	[
+		(ZnCharacterWriteStream on: stream encoding: 'utf8')
+			position: 50;
 			nextPutAll: '**'.
 			
-		"Apparently, in Linux it can randomly fail if not explicitely flush"
+		"Apparently, in Linux it can randomly fail if not explicitly flush"
 		stream flush.
-		].
+	] ensure: [ stream close ].
 	
 	loadedStore := 
 		(OmFileStore 

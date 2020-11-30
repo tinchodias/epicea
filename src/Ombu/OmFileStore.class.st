@@ -10,7 +10,6 @@ Class {
 		'fileReference',
 		'entryPositionsByLocalName',
 		'entryCount',
-		'entryReader',
 		'writingDeferrer',
 		'entryByLocalName',
 		'mustRefresh',
@@ -65,9 +64,7 @@ OmFileStore class >> globalNameFrom: directoryEntryOrFileReference [
 
 { #category : #'instance creation' }
 OmFileStore class >> named: aGlobalName [
-	^ self 
-		named: aGlobalName
-		inDirectory: FileSystem memory
+	^ self named: aGlobalName inDirectory: FileSystem memory
 ]
 
 { #category : #'instance creation' }
@@ -134,7 +131,7 @@ OmFileStore >> entriesCount [
 OmFileStore >> entriesDo: aBlockClosure [ 
 	"Evaluate the closure on each entry"
 
-	self fileReference exists ifTrue: [
+	self fileReference ifExists: [
 		self readEntriesWith: [:readStream | 
 			| reader |
 			reader := self newEntryReader.
@@ -228,39 +225,39 @@ OmFileStore >> flush [
 OmFileStore >> flushEntryBuffer [
 
 	self critical: [
-		| initialPosition initialLocalName |
+		| initialPosition initialLocalName fileStream |
 		self entryBuffer isEmpty ifTrue: [ ^self ].
-		
-		fileReference writeStreamDo: [:fileStream |
+				
+		[ fileStream := ZnCharacterWriteStream on: fileReference binaryWriteStream encoding: #utf8. ] on: ReadOnlyFileException do: [ :anException |
+			fileStream ifNotNil: #close.
+			^ self
+		 ].	
+	
+		[ | anEntryWriter |
 			fileStream setToEnd.
 			
 			initialPosition := fileStream position.
 			initialLocalName := self entryBuffer first value.
-		
-			ZnBufferedWriteStream on: fileStream do: [:aWriteStream |
-				| anEntryWriter |
-				anEntryWriter := self newEntryWriter.
+			anEntryWriter := self newEntryWriter.
 
-				[ self entryBuffer isEmpty ] whileFalse: [
-					| next entry |
-					next := self entryBuffer removeFirst.
-					entry := next key.
+			[ self entryBuffer isEmpty ] whileFalse: [
+				| next entry |
+				next := self entryBuffer removeFirst.
+				entry := next key.
 
-					"Write entry to file"
-					anEntryWriter
-						on: aWriteStream 
-						nextEntryPut: entry.
-					].
+				"Write entry to file"
+				anEntryWriter
+					on: fileStream
+					nextEntryPut: entry.
 				].
 
-			"In Linux it was necessary to explicitely flush the file stream"
+			"In Linux it was necessary to explicitly flush the file stream"
 			fileStream flush.
 			
-			lastStreamPosition := fileStream size.
-			].
+			lastStreamPosition := fileStream position.
+			] ensure: [ fileStream close ].
 	
-		self refreshEntryPositionsByLocalNameStartingAt: initialPosition since: initialLocalName.
-		].
+		self refreshEntryPositionsByLocalNameStartingAt: initialPosition since: initialLocalName ].
 
 ]
 
@@ -301,12 +298,9 @@ OmFileStore >> initializeWithGlobalName: aName fileReference: aFileReference [
 
 { #category : #testing }
 OmFileStore >> isOutdated [
-	"Answer if #refresh is needed. To that end, I check if the file has different size than last time I wrote."
+	"Answer if #refresh is needed. A store is outdated if the file exists and has greater size than last time I wrote."
 
-	^ self fileReference exists
-		ifTrue: [ self fileReference size ~= lastStreamPosition ]
-		ifFalse: [ lastStreamPosition isNotNil ]
-
+	^ self fileReference exists and: [ self fileReference size ~= lastStreamPosition ]
 ]
 
 { #category : #accessing }
@@ -375,7 +369,7 @@ OmFileStore >> printOn: aStream [
 OmFileStore >> readEntriesWith: aBlockClosure [
 
 	self fileReference readStreamDo: [ :readStream | [
-		^ aBlockClosure value: readStream ascii ]
+		^ aBlockClosure value: readStream ]
 			on: Error
 			do: [ :error |
 				(OmFileStoreReadingError 
@@ -397,23 +391,20 @@ OmFileStore >> readEntryForLocalName: aString ifPresent: presentBlockClosure ifA
 
 { #category : #refreshing }
 OmFileStore >> refresh [
-
 	self flush.
 
-	self critical: [
-		mustRefresh := false.
-		self initialize.
-		self fileReference exists ifFalse: [ ^self ].
-		self readEntriesWith: [:readStream | [
-			self newEntryReader
-				stream: readStream;
-				entryPositionsDo: [ :entryPosition |
-					entryCount := entryCount + 1.
-					entryPositionsByLocalName at: entryCount asString put: entryPosition ]
-			] ensure: [
-				headReference := self referenceToLocalName: entryCount asString ]
-			]
-		]
+	self
+		critical: [ mustRefresh := false.
+			self initialize.
+			self fileReference ifAbsent: [ ^ self ].
+			self
+				readEntriesWith: [ :readStream | 
+					[ self newEntryReader
+						stream: readStream;
+						entryPositionsDo: [ :entryPosition | 
+							entryCount := entryCount + 1.
+							entryPositionsByLocalName at: entryCount asString put: entryPosition ] ]
+						ensure: [ headReference := self referenceToLocalName: entryCount asString ] ] ]
 ]
 
 { #category : #private }

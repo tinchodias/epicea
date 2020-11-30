@@ -28,7 +28,7 @@ OmSessionStoreNameStrategyTest >> createFileWith: aName [
 { #category : #private }
 OmSessionStoreNameStrategyTest >> directory [
 
-	^ 'ombu-strategy-tests' asFileReference
+	^ FileLocator temp asFileReference / 'ombu-strategy-tests'
 ]
 
 { #category : #private }
@@ -41,6 +41,7 @@ OmSessionStoreNameStrategyTest >> fileReferenceWith: aName [
 
 { #category : #running }
 OmSessionStoreNameStrategyTest >> setUp [
+
 	super setUp.
 	strategy := self strategyClass new
 ]
@@ -61,13 +62,12 @@ OmSessionStoreNameStrategyTest >> tearDown [
 
 { #category : #tests }
 OmSessionStoreNameStrategyTest >> testWithExistingFile [
-
 	self createFileWith: 'existing'.
 
 	name := strategy nextTo: 'existing' in: self directory.
-	
+
 	self assert: name isString.
-	self deny: name = 'existing'.
+	self deny: name equals: 'existing'.
 	self deny: (self fileReferenceWith: name) exists
 ]
 

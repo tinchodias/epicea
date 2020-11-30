@@ -97,10 +97,6 @@ EpCodeChangeIntegrationTest >> testClassInstanceVariableRemoval [
 
 { #category : #tests }
 EpCodeChangeIntegrationTest >> testClassModificationOfTraitComposition [
-	<expectedFailure>
-	"Failure: Currently, there is no system announcement when the trait composition is changed. 
-	Epicea, confussingly, only registers method addition and modification events 
-	when the trait is installed."
 	
 	| aTrait |
 	aClass := classFactory newClass.
@@ -110,6 +106,20 @@ EpCodeChangeIntegrationTest >> testClassModificationOfTraitComposition [
 	self assert: (self countLogEventsWith: EpClassModification) equals: 1.
 	self assert: (self countLogEventsWith: EpMethodAddition) equals: 0.
 	self assert: (self countLogEventsWith: EpMethodModification) equals: 0.
+
+]
+
+{ #category : #tests }
+EpCodeChangeIntegrationTest >> testClassModificationWithHierarchy [
+	
+	| modifications |
+	aClass := classFactory newClass.
+	classFactory newSubclassOf: aClass using: {}.
+	aClass addSlot: #i asSlot.
+
+	modifications := (self allLogEntriesWith: EpClassModification) collect: [:each | each content].
+	self assert: modifications size equals: 1.
+	self assert: modifications first behaviorAffectedName equals: aClass name.
 
 ]
 
@@ -126,6 +136,22 @@ EpCodeChangeIntegrationTest >> testClassRemoval [
 	"It shouldn't begin with AnObsolete"
 	self assert: events anyOne behaviorAffectedName equals: className.
 
+]
+
+{ #category : #tests }
+EpCodeChangeIntegrationTest >> testClassRemovalWithMethods [
+
+	| events category |
+	aClass := classFactory newClass.
+	category := aClass category.
+	1 to: 7 do: [:index |
+		aClass compile: 'inst', index asString.
+		aClass classSide compile: 'class', index asString ].
+	aClass removeFromSystem.
+	
+	events := self allLogEventsWith: EpMethodRemoval.
+	self assert: events size equals: 14.
+	self assert: (events allSatisfy: [ :each | each affectedPackageName = category ])
 ]
 
 { #category : #tests }
@@ -163,7 +189,7 @@ EpCodeChangeIntegrationTest >> testMetaclassInstanceVariableAddition [
 	aClass := classFactory newClass.
 
 	self assert: (self countLogEventsWith: EpClassModification) equals: 0.
-	aClass theMetaClass instanceVariableNames: 'x'.	
+	aClass classSide instanceVariableNames: 'x'.	
 	self assert: (self countLogEventsWith: EpClassModification) equals: 1.
 
 ]
@@ -176,7 +202,7 @@ EpCodeChangeIntegrationTest >> testMetaclassInstanceVariableAdditionWithTrait [
 	aTrait := classFactory newTrait.
 
 	self assert: (self countLogEventsWith: EpClassModification) equals: 0.
-	aClass theMetaClass uses: aTrait asTraitComposition instanceVariableNames: 'x'.	
+	aClass classSide uses: aTrait asTraitComposition instanceVariableNames: 'x'.	
 	self assert: (self countLogEventsWith: EpClassModification) equals: 1.
 
 ]
@@ -244,7 +270,6 @@ EpCodeChangeIntegrationTest >> testMethodProtocolChange [
 
 { #category : #tests }
 EpCodeChangeIntegrationTest >> testMethodRecompilationShouldNotLog [
-
 	| headBeforeRecompiling |
 	aClass := classFactory newClass.
 	aClass compile: 'fortyTwo ^42'.
@@ -252,8 +277,8 @@ EpCodeChangeIntegrationTest >> testMethodRecompilationShouldNotLog [
 	headBeforeRecompiling := monitor log head.
 
 	aClass compile: 'fortyTwo ^42'.
-	
-	self assert: monitor log head == headBeforeRecompiling
+
+	self assert: monitor log head identicalTo: headBeforeRecompiling
 ]
 
 { #category : #tests }
@@ -297,7 +322,7 @@ EpCodeChangeIntegrationTest >> testRedundantClassDefinition [
 
 	self assert: (self countLogEventsWith: EpClassModification) equals: 0.
 
-	self class compiler evaluate: aClass theMetaClass definition.
+	self class compiler evaluate: aClass classSide definition.
 
 	self assert: (self countLogEventsWith: EpClassModification) equals: 0.
 
@@ -335,10 +360,6 @@ EpCodeChangeIntegrationTest >> testTraitAddition [
 
 { #category : #tests }
 EpCodeChangeIntegrationTest >> testTraitModificationOfTraitComposition [
-	<expectedFailure>
-	"Failure: Currently, there is no system announcement when the trait composition is changed. 
-	Epicea, confussingly, only registers method addition and modification events 
-	when the trait is installed."
 	
 	| aTrait |
 	aClass := classFactory newTrait.

@@ -26,13 +26,16 @@ OmMemoryStore class >> new [
 ]
 
 { #category : #'instance creation' }
-OmMemoryStore class >> withAll: aCollection [
+OmMemoryStore class >> withAllContents: aCollection [
+	| entries |
+	entries := aCollection collect: [ :each | OmEntry content: each ].
+	^ self withAllEntries: entries
+]
 
+{ #category : #'instance creation' }
+OmMemoryStore class >> withAllEntries: aCollection [
 	^ self new
-		in: [:store | 
-			aCollection 
-				collect: [:each | OmEntry content: each ]
-				thenDo: [:entry | store newEntry: entry ] ];
+		in: [ :store | aCollection do: [ :entry | store newEntry: entry ] ];
 		yourself
 ]
 
@@ -104,6 +107,6 @@ OmMemoryStore >> refresh [
 { #category : #accessing }
 OmMemoryStore >> writingFileReference [
 	"Stub"
-	
+
 	^ (FileSystem memory / 'store.ombu') ensureCreateFile
 ]

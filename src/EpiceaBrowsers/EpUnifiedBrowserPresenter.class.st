@@ -17,11 +17,12 @@ Class {
 
 { #category : #specs }
 EpUnifiedBrowserPresenter class >> defaultSpec [
-	^ SpPanedLayout newHorizontal
-		position: 40 percent;
-		add: #logNodesPresenter;
-		add: #logPresenter;
-		yourself
+
+	^ SpPanedLayout newLeftToRight
+		  positionOfSlider: 40 percent;
+		  add: #logNodesPresenter;
+		  add: #logPresenter;
+		  yourself
 ]
 
 { #category : #'instance creation' }
@@ -44,11 +45,11 @@ EpUnifiedBrowserPresenter class >> worldMenuItemOn: aBuilder [
 	<worldMenu>
 
 	(aBuilder item: 'Code Changes')
-		parent: #Tools;
+		parent: #Changes;
 		action: [ self open ]; 
 		icon: self taskbarIcon;
 		help: 'Browse recorded change logs during from Pharo coding sessions and replay changes.';
-		order: 401
+		order: 1
 ]
 
 { #category : #refreshing }

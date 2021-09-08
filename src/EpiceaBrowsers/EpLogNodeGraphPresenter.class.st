@@ -23,10 +23,10 @@ Class {
 
 { #category : #specs }
 EpLogNodeGraphPresenter class >> defaultSpec [
-	^ SpBoxLayout newVertical
+	^ SpBoxLayout newTopToBottom
 		add: #logNodesTable;
 		add:
-			(SpBoxLayout newHorizontal
+			(SpBoxLayout newLeftToRight
 					add: #hiedraCheckBox;
 					add: #refreshButton;
 					add: #selectDirectoryButton;
@@ -202,7 +202,7 @@ EpLogNodeGraphPresenter >> selectedLogNodes [
 	^ logNodesTable selection selectedItems
 ]
 
-{ #category : #'api-events' }
+{ #category : #'api - events' }
 EpLogNodeGraphPresenter >> whenSelectionChangedDo: aBlock [
 	logNodesTable whenSelectionChangedDo: aBlock
 ]

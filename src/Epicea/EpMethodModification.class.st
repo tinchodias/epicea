@@ -1,23 +1,30 @@
 "
-I represent a modification of a method in a class or a trait.
+I represent the modification of a method in a class or a trait. Not any modification but only a change in either the sourceCode and the protocol.
+
 "
 Class {
 	#name : #EpMethodModification,
 	#superclass : #EpMethodChange,
 	#instVars : [
-		'oldMethod',
-		'newMethod'
+		'oldProtocol',
+		'oldSourceCode'
 	],
 	#category : #'Epicea-Model'
 }
 
 { #category : #'instance creation' }
-EpMethodModification class >> oldMethod: anOldMethod newMethod: aNewMethod [
+EpMethodModification class >> selector: aSelector newSourceCode: theNewSourceCode oldSourceCode: theOldSourceCode methodClassName: aClassName isMeta: aBoolean packageName: aPackageName newProtocol: theNewProtocol oldProtocol: theOldProtocol [
 
 	^ self basicNew
-		initializeWithOldMethod: anOldMethod
-		newMethod: aNewMethod;
-		yourself
+		  initializeSelector: aSelector
+		  sourceCode: theNewSourceCode
+		  methodClassName: aClassName
+		  isMeta: aBoolean
+		  packageName: aPackageName
+		  protocol: theNewProtocol
+		  oldSourceCode: theOldSourceCode
+		  oldProtocol: theOldProtocol;
+		  yourself
 ]
 
 { #category : #visitor }
@@ -26,58 +33,67 @@ EpMethodModification >> accept: aVisitor [
 	^ aVisitor visitMethodModification: self 
 ]
 
-{ #category : #accessing }
-EpMethodModification >> affectedPackageName [
+{ #category : #copying }
+EpMethodModification >> copyAsMethodAddition [
 
-	^ self newMethod package
+	^ EpMethodAddition
+		  selector: selector
+		  sourceCode: sourceCode
+		  methodClassName: methodClassName
+		  isMeta: isMeta
+		  packageName: packageName
+		  protocol: protocol
 ]
 
 { #category : #initialization }
-EpMethodModification >> initializeWithOldMethod: anOldMethod newMethod: aNewMethod [
+EpMethodModification >> initializeSelector: aSelector sourceCode: theNewSourceCode methodClassName: aClassName isMeta: aBoolean packageName: aPackageName protocol: theNewProtocol oldSourceCode: theOldSourceCode oldProtocol: theOldProtocol [
 
-	self initialize.
-	oldMethod := anOldMethod asEpiceaRingDefinition.
-	newMethod := aNewMethod asEpiceaRingDefinition.
+	self
+		initializeSelector: aSelector
+		sourceCode: theNewSourceCode
+		methodClassName: aClassName
+		isMeta: aBoolean
+		packageName: aPackageName
+		protocol: theNewProtocol.
+
+	oldSourceCode := theOldSourceCode.
+	oldProtocol := theOldProtocol
 ]
 
-{ #category : #accessing }
-EpMethodModification >> methodAffected [
-	
-	^ newMethod
-]
+{ #category : #operations }
+EpMethodModification >> inverse [
 
-{ #category : #accessing }
-EpMethodModification >> newMethod [
-
-	^ newMethod
+	^ EpMethodModification
+		  selector: selector
+		  newSourceCode: oldSourceCode
+		  oldSourceCode: sourceCode
+		  methodClassName: methodClassName
+		  isMeta: isMeta
+		  packageName: packageName
+		  newProtocol: oldProtocol
+		  oldProtocol: protocol
 ]
 
 { #category : #accessing }
 EpMethodModification >> newProtocol [
 
-	^ newMethod protocol
+	^ protocol
 ]
 
 { #category : #accessing }
 EpMethodModification >> newSourceCode [
 
-	^ newMethod sourceCode
-]
-
-{ #category : #accessing }
-EpMethodModification >> oldMethod [
-
-	^ oldMethod
+	^ sourceCode
 ]
 
 { #category : #accessing }
 EpMethodModification >> oldProtocol [
 
-	^ oldMethod protocol
+	^ oldProtocol
 ]
 
 { #category : #accessing }
 EpMethodModification >> oldSourceCode [
 
-	^ oldMethod sourceCode
+	^ oldSourceCode
 ]

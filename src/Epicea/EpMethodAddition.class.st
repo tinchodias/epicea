@@ -4,18 +4,32 @@ I represent a addition of a method in a class or a trait.
 Class {
 	#name : #EpMethodAddition,
 	#superclass : #EpMethodChange,
-	#instVars : [
-		'method'
-	],
 	#category : #'Epicea-Model'
 }
 
 { #category : #'instance creation' }
-EpMethodAddition class >> method: aCompiledMethod [
-	
+EpMethodAddition class >> newFromInstalledCompiledMethod: method [
+
+	^ self
+		  selector: method selector
+		  sourceCode: method sourceCode
+		  methodClassName: method methodClass name
+		  isMeta: method methodClass isMeta
+		  packageName: method epiceaPackageName
+		  protocol: method category
+]
+
+{ #category : #'instance creation' }
+EpMethodAddition class >> selector: aSelector sourceCode: aSourceCode methodClassName: aClassName isMeta: aBoolean packageName: aPackageName protocol: aProtocol [
+
 	^ self basicNew
-		initializeMethod: aCompiledMethod;
-		yourself
+		  initializeSelector: aSelector
+		  sourceCode: aSourceCode
+		  methodClassName: aClassName
+		  isMeta: aBoolean
+		  packageName: aPackageName
+		  protocol: aProtocol;
+		  yourself
 ]
 
 { #category : #visitor }
@@ -24,45 +38,25 @@ EpMethodAddition >> accept: aVisitor [
 	^ aVisitor visitMethodAddition: self
 ]
 
-{ #category : #accessing }
-EpMethodAddition >> affectedPackageName [
-
-	^ method package
+{ #category : #copying }
+EpMethodAddition >> copyAsMethodAddition [
+	^ self copy
 ]
 
-{ #category : #initialization }
-EpMethodAddition >> initializeMethod: aCompiledMethod [
+{ #category : #converting }
+EpMethodAddition >> inverse [
 
-	self initialize.
-	method := aCompiledMethod asEpiceaRingDefinition.
-]
-
-{ #category : #accessing }
-EpMethodAddition >> methodAdded [
-
-	^ method
+	^ self copyAsInstanceOf: EpMethodRemoval
 ]
 
 { #category : #accessing }
-EpMethodAddition >> methodAffected [
+EpMethodAddition >> methodAffectedProtocol [
 
-	^ self methodAdded
+	^ protocol
 ]
 
 { #category : #accessing }
-EpMethodAddition >> protocol [
+EpMethodAddition >> methodAffectedSourceCode [
 
-	^ method protocol
-]
-
-{ #category : #accessing }
-EpMethodAddition >> selector [
-
-	^ method selector
-]
-
-{ #category : #accessing }
-EpMethodAddition >> sourceCode [
-
-	^ method sourceCode
+	^ sourceCode
 ]

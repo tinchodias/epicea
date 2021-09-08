@@ -20,6 +20,11 @@ EpInverseVisitor >> visitBehaviorCategoryChange: aChange [
 ]
 
 { #category : #visitor }
+EpInverseVisitor >> visitBehaviorChange: anEpChange [
+	^ anEpChange inverse
+]
+
+{ #category : #visitor }
 EpInverseVisitor >> visitBehaviorCommentChange: aChange [
 
 	^ EpBehaviorCommentChange
@@ -67,22 +72,10 @@ EpInverseVisitor >> visitCategoryRename: aChange [
 ]
 
 { #category : #visitor }
-EpInverseVisitor >> visitClassAddition: aChange [
-
-	^ EpClassRemoval class: aChange behaviorAffected
-]
-
-{ #category : #visitor }
 EpInverseVisitor >> visitClassModification: aChange [
 
 	^ EpClassModification oldClass: aChange newClass newClass: aChange oldClass.
 
-]
-
-{ #category : #visitor }
-EpInverseVisitor >> visitClassRemoval: aChange [
-
-	^ EpClassAddition class: aChange behaviorAffected
 ]
 
 { #category : #visitor }
@@ -91,21 +84,8 @@ EpInverseVisitor >> visitCodeChange: aChange [
 ]
 
 { #category : #visitor }
-EpInverseVisitor >> visitMethodAddition: aChange [
-
-	^ EpMethodRemoval method: aChange methodAffected
-]
-
-{ #category : #visitor }
-EpInverseVisitor >> visitMethodModification: aChange [
-
-	^ EpMethodModification oldMethod: aChange newMethod newMethod: aChange oldMethod
-]
-
-{ #category : #visitor }
-EpInverseVisitor >> visitMethodRemoval: aChange [
-
-	^ EpMethodAddition method: aChange methodAffected
+EpInverseVisitor >> visitMethodChange: anEpChange [
+	^ anEpChange inverse
 ]
 
 { #category : #visitor }
@@ -122,19 +102,7 @@ EpInverseVisitor >> visitProtocolRemoval: aChange [
 ]
 
 { #category : #visitor }
-EpInverseVisitor >> visitTraitAddition: aChange [
-	
-	^ EpTraitRemoval trait: aChange behaviorAffected
-]
-
-{ #category : #visitor }
 EpInverseVisitor >> visitTraitModification: aTraitModification [
 
 	self notYetImplemented
-]
-
-{ #category : #visitor }
-EpInverseVisitor >> visitTraitRemoval: aChange [
-
-	^ EpTraitAddition trait: aChange behaviorAffected
 ]

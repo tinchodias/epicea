@@ -60,14 +60,14 @@ EpPluggableFilter class >> isBehaviorNamed: aString [
 ]
 
 { #category : #'special filters' }
-EpPluggableFilter class >> isMethod: aMethod [
+EpPluggableFilter class >> isMethodLike: aMethodChange [
 
 	^ self
-		title: 'is ', aMethod printString
-		condition: [ :e | 
-			e content isEpMethodChange and: [ 
-			e content behaviorAffectedName = aMethod parentName and: [ 
-			e content methodAffectedSelector = aMethod selector ] ] ]
+		title: 'is method like ', aMethodChange printString
+		condition: [ :e |
+			e content isEpMethodChange and: [
+			e content behaviorAffectedName = aMethodChange behaviorAffectedName and: [
+			e content methodAffectedSelector = aMethodChange methodAffectedSelector ] ] ]
 ]
 
 { #category : #'special filters' }

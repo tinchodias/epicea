@@ -6,13 +6,3 @@ EpLog >> browseEvents [
 	
 	^ EpLogBrowserPresenter openWithLog: self
 ]
-
-{ #category : #'*EpiceaBrowsers' }
-EpLog >> browseVersionsOf: aMethod [
-	"Browse all versions of aMethod from my head."
-	
-	^ (EpLogBrowserPresenter newWithLog: self)
-			addFilter: (EpPluggableFilter isMethod: aMethod);
-			refresh;
-			openWithSpec
-]

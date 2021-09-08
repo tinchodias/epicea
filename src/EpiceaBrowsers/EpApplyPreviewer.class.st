@@ -43,7 +43,7 @@ EpApplyPreviewer >> visitBehaviorCategoryChange: aChange [
 	self
 		behaviorNamed: aChange behaviorAffectedName
 		ifPresent: [ :behavior |
-			^ behavior category = aChange behaviorAffected category
+			^ behavior category = aChange behaviorAffectedCategory
 				ifTrue: [ #() ]
 				ifFalse: [ {
 					EpBehaviorCategoryChange
@@ -133,7 +133,7 @@ EpApplyPreviewer >> visitClassRemoval: aChange [
 
 	self 
 		behaviorNamed: aChange behaviorAffectedName
-		ifPresent: [ :behavior | ^ { EpClassRemoval class: behavior } ].
+		ifPresent: [ :behavior | ^ { EpClassRemoval newFromInstalledClass: behavior } ].
 
 	^ #()
 ]
@@ -162,13 +162,20 @@ EpApplyPreviewer >> visitMethodChange: aChange [
 			^ behavior
 				compiledMethodAt: aChange methodAffectedSelector
 				ifPresent: [ :method | 
-					(method protocol ~= aChange methodAffectedProtocol
-						or: [ method sourceCode ~= aChange methodAffectedSourceCode ])
-						ifTrue: [ {(EpMethodModification
-								oldMethod: method
-								newMethod: aChange methodAffected)} ]
+					(method protocol ~= aChange methodAffectedProtocol or: [ 
+					method sourceCode ~= aChange methodAffectedSourceCode ])
+						ifTrue: [ { 
+							EpMethodModification
+								selector: method selector
+					         newSourceCode: aChange methodAffectedSourceCode
+								oldSourceCode: method sourceCode
+					         methodClassName: method methodClass name
+					         isMeta: method methodClass isMeta
+					         packageName: method epiceaPackageName
+								newProtocol: aChange methodAffectedProtocol
+								oldProtocol: method protocol } ]
 						ifFalse: [ #() ] ]
-				ifAbsent: [ {(EpMethodAddition method: aChange methodAffected)} ] ].
+				ifAbsent: [ { aChange copyAsMethodAddition } ] ].
 	^ {aChange}
 ]
 
@@ -181,9 +188,12 @@ EpApplyPreviewer >> visitMethodRemoval: aChange [
 			"If method comes from trait, removing has no impact."
 			^ behavior 
 				compiledMethodAt: aChange methodAffectedSelector
-				ifPresent: [ :method | method isFromTrait not
-					ifTrue: [ { EpMethodRemoval method: method } ]
-					ifFalse: [ #() ] ]
+				ifPresent: [ :method |
+					method isFromTrait
+						ifFalse: [ {
+							EpMethodRemoval 
+								newFromInstalledCompiledMethod: method } ]
+						ifTrue: [ #() ] ]
 				ifAbsent: [ #() ] ].
 
 	^ #() "No impact if container does not exist"

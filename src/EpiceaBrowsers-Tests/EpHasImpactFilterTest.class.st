@@ -29,7 +29,7 @@ EpHasImpactFilterTest >> testClassSideMethodWithImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass classSide.
 	aClass compile: 'a ^1'.
-	anEvent := OmEntry content: (EpMethodAddition method: aClass >> #a).
+	anEvent := OmEntry content: (EpMethodAddition newFromInstalledCompiledMethod: aClass >> #a).
 	aClass compile: 'a ^2'.
 	self assert: (impactFilter accepts: anEvent)
 ]
@@ -39,7 +39,7 @@ EpHasImpactFilterTest >> testClassSideMethodWithoutImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass classSide.
 	aClass compile: 'a ^1'.
-	anEvent := OmEntry content: (EpMethodAddition method: aClass >> #a).
+	anEvent := OmEntry content: (EpMethodAddition newFromInstalledCompiledMethod: aClass >> #a).
 	self deny: (impactFilter accepts: anEvent)
 ]
 
@@ -47,7 +47,7 @@ EpHasImpactFilterTest >> testClassSideMethodWithoutImpact [
 EpHasImpactFilterTest >> testClassWithClassSideImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass.
-	anEvent := OmEntry content: (EpClassAddition class: aClass).
+	anEvent := OmEntry content: (EpClassAddition newFromInstalledClass: aClass).
 	aClass classSide addSlot: #a.
 	self assert: (impactFilter accepts: anEvent)
 ]
@@ -56,7 +56,7 @@ EpHasImpactFilterTest >> testClassWithClassSideImpact [
 EpHasImpactFilterTest >> testClassWithInstanceSideImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass.
-	anEvent := OmEntry content: (EpClassAddition class: aClass).
+	anEvent := OmEntry content: (EpClassAddition newFromInstalledClass: aClass).
 	aClass addSlot: #a.
 	self assert: (impactFilter accepts: anEvent)
 ]
@@ -65,7 +65,7 @@ EpHasImpactFilterTest >> testClassWithInstanceSideImpact [
 EpHasImpactFilterTest >> testClassWithoutImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass.
-	anEvent := OmEntry content: (EpClassAddition class: aClass).
+	anEvent := OmEntry content: (EpClassAddition newFromInstalledClass: aClass).
 	self deny: (impactFilter accepts: anEvent)
 ]
 
@@ -106,7 +106,7 @@ EpHasImpactFilterTest >> testMethodWithImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass.
 	aClass compile: 'a ^1'.
-	anEvent := OmEntry content: (EpMethodAddition method: aClass >> #a).
+	anEvent := OmEntry content: (EpMethodAddition newFromInstalledCompiledMethod: aClass >> #a).
 	aClass compile: 'a ^2'.
 	self assert: (impactFilter accepts: anEvent)
 ]
@@ -116,6 +116,6 @@ EpHasImpactFilterTest >> testMethodWithoutImpact [
 	| anEvent aClass |
 	aClass := classFactory newClass.
 	aClass compile: 'a ^1'.
-	anEvent := OmEntry content: (EpMethodAddition method: aClass >> #a).
+	anEvent := OmEntry content: (EpMethodAddition newFromInstalledCompiledMethod: aClass >> #a).
 	self deny: (impactFilter accepts: anEvent)
 ]

@@ -54,11 +54,11 @@ EpApplyVisitor >> visitCategoryRename: aChange [
 ]
 
 { #category : #visitor }
-EpApplyVisitor >> visitClassAddition: aClassCreation [
+EpApplyVisitor >> visitClassAddition: anEpClassAddition [
 
 	self compiler
-		evaluate: aClassCreation classAdded definitionSource;
-		evaluate: aClassCreation classAdded classSide definitionSource.
+		evaluate: anEpClassAddition behaviorAffectedDefinitionSource;
+		evaluate: anEpClassAddition behaviorAffectedClassDefinitionSource.
 ]
 
 { #category : #visitor }
@@ -87,8 +87,8 @@ EpApplyVisitor >> visitMethodAddition: aMethodCreated [
 		behaviorNamed: aMethodCreated behaviorAffectedName
 		ifPresent: [ :behavior | 
 			behavior
-				compile: aMethodCreated sourceCode 
-				classified: aMethodCreated protocol ]
+				compile: aMethodCreated methodAffectedSourceCode 
+				classified: aMethodCreated methodAffectedProtocol ]
 ]
 
 { #category : #visitor }
@@ -108,7 +108,7 @@ EpApplyVisitor >> visitMethodRemoval: aMethodRemoval [
 	self 
 		behaviorNamed: aMethodRemoval behaviorAffectedName
 		ifPresent: [ :behavior | 
-			behavior removeSelector: aMethodRemoval selector ]
+			behavior removeSelector: aMethodRemoval methodAffectedSelector ]
 ]
 
 { #category : #visitor }

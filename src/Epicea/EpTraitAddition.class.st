@@ -3,10 +3,7 @@ I represent the creation of a trait.
 "
 Class {
 	#name : #EpTraitAddition,
-	#superclass : #EpTraitChange,
-	#instVars : [
-		'trait'
-	],
+	#superclass : #EpTmpSingleTraitChange,
 	#category : #'Epicea-Model'
 }
 
@@ -24,26 +21,8 @@ EpTraitAddition >> accept: aVisitor [
 	^ aVisitor visitTraitAddition: self 
 ]
 
-{ #category : #accessing }
-EpTraitAddition >> behaviorAffected [
-	^ self traitAdded
-]
-
-{ #category : #accessing }
-EpTraitAddition >> behaviorAffectedName [
-
-	^ self traitAdded name
-]
-
-{ #category : #initialization }
-EpTraitAddition >> initializeWithTrait: aTrait [
-
-	self initialize.
-	trait := aTrait asEpiceaRingDefinition.
-]
-
-{ #category : #accessing }
-EpTraitAddition >> traitAdded [
-
-	^ trait 
+{ #category : #operations }
+EpTraitAddition >> inverse [
+	
+	^ self copyAsInstanceOf: EpTraitRemoval
 ]

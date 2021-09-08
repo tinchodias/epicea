@@ -25,6 +25,12 @@ EpBehaviorChange >> behaviorAffected [
 ]
 
 { #category : #accessing }
+EpBehaviorChange >> behaviorAffectedCategory [
+
+	^ self behaviorAffected category
+]
+
+{ #category : #accessing }
 EpBehaviorChange >> behaviorAffectedName [
 	^ self shouldBeImplemented 
 ]

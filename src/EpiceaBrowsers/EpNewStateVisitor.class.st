@@ -42,15 +42,15 @@ EpNewStateVisitor >> visitCategoryRename: aClassCategoryRenamedChange [
 ]
 
 { #category : #visitor }
-EpNewStateVisitor >> visitClassAddition: aClassCreatedChange [
+EpNewStateVisitor >> visitClassAddition: aClassAddition [
 
-	^ self stringForBehavior: aClassCreatedChange classAdded
+	^ aClassAddition behaviorAffectedFullDefinitionSource
 ]
 
 { #category : #visitor }
 EpNewStateVisitor >> visitClassModification: aModificationClassChange [
 
-	^ self stringForBehavior: aModificationClassChange newClass
+	^ aModificationClassChange newFullDefinitionSource
 ]
 
 { #category : #visitor }
@@ -93,15 +93,13 @@ EpNewStateVisitor >> visitRedo: aRedoEvent [
 ]
 
 { #category : #visitor }
-EpNewStateVisitor >> visitTraitAddition: aTraitCreation [
+EpNewStateVisitor >> visitTraitAddition: aTraitAddition [
 
-	^ self stringForBehavior: aTraitCreation traitAdded
-	    
+	^ aTraitAddition behaviorAffectedFullDefinitionSource
 ]
 
 { #category : #visitor }
-EpNewStateVisitor >> visitTraitModification: aTraitModificationChange [
+EpNewStateVisitor >> visitTraitModification: anEpTraitModification [
 
-	^ self stringForBehavior: aTraitModificationChange newTrait
-	    
+	^ anEpTraitModification newFullDefinitionSource
 ]

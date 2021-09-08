@@ -4,13 +4,27 @@ I represent a change in the method dictionary of a class or a trait.
 Class {
 	#name : #EpMethodChange,
 	#superclass : #EpCodeChange,
+	#instVars : [
+		'protocol',
+		'selector',
+		'sourceCode',
+		'methodClassName',
+		'packageName',
+		'isMeta'
+	],
 	#category : #'Epicea-Model'
 }
 
 { #category : #accessing }
+EpMethodChange >> affectedPackageName [
+
+	^ packageName
+]
+
+{ #category : #accessing }
 EpMethodChange >> behaviorAffectedName [
 
-	^ self methodAffected className
+	^ methodClassName
 ]
 
 { #category : #testing }
@@ -21,6 +35,19 @@ EpMethodChange >> doesOverride: aCodeChange [
 		aCodeChange methodAffectedSelector = self methodAffectedSelector ] ]
 ]
 
+{ #category : #initialization }
+EpMethodChange >> initializeSelector: aSelector sourceCode: aSourceCode methodClassName: aClassName isMeta: aBoolean packageName: aPackageName protocol: aProtocol [
+
+	self initialize.
+
+	selector := aSelector.
+	sourceCode := aSourceCode.
+	methodClassName := aClassName.
+	isMeta := aBoolean.
+	packageName := aPackageName.
+	protocol := aProtocol
+]
+
 { #category : #testing }
 EpMethodChange >> isEpMethodChange [
 
@@ -28,27 +55,15 @@ EpMethodChange >> isEpMethodChange [
 ]
 
 { #category : #accessing }
-EpMethodChange >> methodAffected [
-	
-	^ self subclassResponsibility 
-]
+EpMethodChange >> methodAffectedIsMeta [
 
-{ #category : #accessing }
-EpMethodChange >> methodAffectedProtocol [
-
-	^ self methodAffected protocol
+	^ isMeta
 ]
 
 { #category : #accessing }
 EpMethodChange >> methodAffectedSelector [
 
-	^ self methodAffected selector
-]
-
-{ #category : #accessing }
-EpMethodChange >> methodAffectedSourceCode [
-
-	^ self methodAffected sourceCode
+	^ selector
 ]
 
 { #category : #printing }

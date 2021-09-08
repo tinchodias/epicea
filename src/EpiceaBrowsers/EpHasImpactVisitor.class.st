@@ -41,7 +41,7 @@ EpHasImpactVisitor >> visitBehaviorCategoryChange: aChange [
 	self
 		behaviorNamed: aChange behaviorAffectedName
 		ifPresent: [ :behavior |
-			^ behavior category ~= aChange behaviorAffected category ].
+			^ behavior category ~= aChange behaviorAffectedCategory ].
 			
 	^ true
 ]

@@ -13,8 +13,24 @@ EpCodeChange >> affectedPackageName [
 	^ self subclassResponsibility 
 ]
 
+{ #category : #copying }
+EpCodeChange >> copyAsInstanceOf: aClass [
+
+	| aCopy |
+	aCopy := self copy.
+	aClass adoptInstance: aCopy.
+	^ aCopy
+]
+
 { #category : #testing }
 EpCodeChange >> doesOverride: aCodeChange [ 
+
+	^ self subclassResponsibility
+]
+
+{ #category : #operations }
+EpCodeChange >> inverse [
+	"Answer the inverse change."
 
 	^ self subclassResponsibility
 ]

@@ -39,7 +39,7 @@ EpMonitorIntegrationTest >> setUp [
 		yourself.
 	classFactory := ClassFactoryForTestCase new.
 	monitor := EpMonitor newWithLog: logBuilder log.
-
+	monitor debugMode: true.
 ]
 
 { #category : #running }

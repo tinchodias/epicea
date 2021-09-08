@@ -125,7 +125,7 @@ EpTestLogBuilder >> oneTriggerWithFourChildrenLog [
 		triggerReference: triggerReference.
 
 	self
-		logEvent: (EpClassAddition class: Integer)
+		logEvent: (EpClassAddition newFromInstalledClass: Integer)
 		triggerReference: triggerReference.
 
 	self
@@ -148,7 +148,7 @@ EpTestLogBuilder >> oneTriggerWithOneChildLog [
 		triggerReference: triggerReference.
 
 	self
-		logEvent: (EpClassAddition class: Integer)
+		logEvent: (EpClassAddition newFromInstalledClass: Integer)
 		triggerReference: triggerReference.
 		
 	self

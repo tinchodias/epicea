@@ -3,10 +3,7 @@ I represent the removal of a trait.
 "
 Class {
 	#name : #EpTraitRemoval,
-	#superclass : #EpTraitChange,
-	#instVars : [
-		'trait'
-	],
+	#superclass : #EpTmpSingleTraitChange,
 	#category : #'Epicea-Model'
 }
 
@@ -22,29 +19,4 @@ EpTraitRemoval class >> trait: aTrait [
 EpTraitRemoval >> accept: aVisitor [
 
 	^ aVisitor visitTraitRemoval: self 
-]
-
-{ #category : #accessing }
-EpTraitRemoval >> behaviorAffected [
-
-	^ self traitRemoved
-]
-
-{ #category : #accessing }
-EpTraitRemoval >> behaviorAffectedName [
-
-	^ self traitRemoved name
-]
-
-{ #category : #initialization }
-EpTraitRemoval >> initializeWithTrait: aTrait [
-
-	self initialize.
-	trait := aTrait asEpiceaRingDefinition.
-]
-
-{ #category : #accessing }
-EpTraitRemoval >> traitRemoved [
-
-	^ trait
 ]

@@ -10,7 +10,7 @@ EpApplyTest >> applyInputEntry [
 	EpLogBrowserOperationFactory new
 		logBrowserModel: (EpLogBrowserPresenter newWithLog: monitor log);
 		entries: { inputEntry };
-		errorHandlerBlock: [:error | error signal ];
+		errorHandlerBlock: [:error | error pass ];
 		applyCodeChanges
 
 ]

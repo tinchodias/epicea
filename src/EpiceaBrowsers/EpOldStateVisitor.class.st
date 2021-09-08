@@ -40,15 +40,15 @@ EpOldStateVisitor >> visitCategoryRename: aClassCategoryRenamedChange [
 ]
 
 { #category : #visitor }
-EpOldStateVisitor >> visitClassModification: aModificationClassChange [
+EpOldStateVisitor >> visitClassModification: anEpClassModification [
 
-	^ self stringForBehavior: aModificationClassChange oldClass
+	^ anEpClassModification oldFullDefinitionSource
 ]
 
 { #category : #visitor }
 EpOldStateVisitor >> visitClassRemoval: aClassRemovalChange [
 
-	^ self stringForBehavior: aClassRemovalChange classRemoved
+	^ aClassRemovalChange behaviorAffectedFullDefinitionSource
 	    
 ]
 
@@ -81,16 +81,16 @@ EpOldStateVisitor >> visitProtocolRemoval: aProtocolRemoval [
 ]
 
 { #category : #visitor }
-EpOldStateVisitor >> visitTraitModification: aTraitModificationChange [
+EpOldStateVisitor >> visitTraitModification: anEpTraitModification [
 
-	^ self stringForBehavior: aTraitModificationChange oldTrait
+	^ anEpTraitModification oldFullDefinitionSource
 	    
 ]
 
 { #category : #visitor }
-EpOldStateVisitor >> visitTraitRemoval:  aTraitRemoval [
+EpOldStateVisitor >> visitTraitRemoval: aTraitRemoval [
 
-	^ self stringForBehavior: aTraitRemoval traitRemoved
+	^ aTraitRemoval behaviorAffectedFullDefinitionSource
 ]
 
 { #category : #visitor }

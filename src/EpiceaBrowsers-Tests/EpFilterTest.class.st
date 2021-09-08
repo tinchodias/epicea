@@ -12,7 +12,7 @@ EpFilterTest >> assert: aFilter accepts: anEvent rejects: anotherEvent [
 
 { #category : #resources }
 EpFilterTest >> classAddition [
-	^ self entryWith: (EpClassAddition class: Object)
+	^ self entryWith: (EpClassAddition newFromInstalledClass: Object)
 ]
 
 { #category : #running }
@@ -22,7 +22,7 @@ EpFilterTest >> entryWith: anEvent [
 
 { #category : #resources }
 EpFilterTest >> methodAddition [
-	^ self entryWith: (EpMethodAddition method: Object >> #printOn:)
+	^ self entryWith: (EpMethodAddition newFromInstalledCompiledMethod: Object >> #printOn:)
 ]
 
 { #category : #resources }

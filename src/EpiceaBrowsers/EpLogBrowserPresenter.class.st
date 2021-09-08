@@ -341,7 +341,7 @@ EpLogBrowserPresenter >> filterAllChangesToSelection [
 	changes size = 1 ifFalse: [ ^ self inform: 'Should select a single method change' ]. 
 	changes anyOne isEpMethodChange ifFalse: [ ^ self inform: 'Should select a method' ]. 
 
-	self addFilter: (EpPluggableFilter isMethod: changes anyOne methodAffected).
+	self addFilter: (EpPluggableFilter isMethodLike: changes anyOne).
 ]
 
 { #category : #'menu - filters' }

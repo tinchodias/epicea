@@ -227,8 +227,8 @@ EpCodeChangeIntegrationTest >> testMethodModificationOfProtocol [
 	events := self allLogEventsWith: EpMethodModification.
 	self assert: events size equals: 1.
 	event := events anyOne.
-	self assert: event oldMethod protocol equals: 'old'.
-	self assert: event newMethod protocol equals: 'new'.
+	self assert: event oldProtocol equals: 'old'.
+	self assert: event newProtocol equals: 'new'.
 
 ]
 
@@ -243,8 +243,8 @@ EpCodeChangeIntegrationTest >> testMethodModificationOfSourceCode [
 	events := self allLogEventsWith: EpMethodModification.
 	self assert: events size equals: 1.
 	event := events anyOne.
-	self assert: event oldMethod sourceCode equals: 'fortyTwo ^42'.
-	self assert: event newMethod sourceCode equals: 'fortyTwo ^nil'.
+	self assert: event oldSourceCode equals: 'fortyTwo ^42'.
+	self assert: event newSourceCode equals: 'fortyTwo ^nil'.
 
 ]
 
@@ -355,7 +355,7 @@ EpCodeChangeIntegrationTest >> testTraitAddition [
 	events := self allLogEventsWith: EpTraitAddition.
 	self assert: events size equals: 1.
 	event := events anyOne.
-	self assert: event behaviorAffected category equals: category.
+	self assert: event behaviorAffectedCategory equals: category.
 ]
 
 { #category : #tests }
@@ -383,7 +383,7 @@ EpCodeChangeIntegrationTest >> testTraitRemoval [
 	events := self allLogEventsWith: EpTraitRemoval.
 	self assert: events size equals: 1.
 	event := events anyOne.
-	self assert: event behaviorAffected category equals: category.
+	self assert: event behaviorAffectedCategory equals: category.
 ]
 
 { #category : #running }

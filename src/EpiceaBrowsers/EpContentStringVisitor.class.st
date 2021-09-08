@@ -28,17 +28,6 @@ EpContentStringVisitor >> printProtocol: protocol sourceCode: sourceCode [
 ]
 
 { #category : #visitor }
-EpContentStringVisitor >> stringForBehavior: aClassOrTrait [
-
-	^ String streamContents: [ :stream |
-		stream
-			nextPutAll: aClassOrTrait definitionSource;
-			nextPut: $.;
-			cr; cr;
-			nextPutAll: aClassOrTrait classSide definitionSource ]
-]
-
-{ #category : #visitor }
 EpContentStringVisitor >> visitEvent: anEvent [
 	"By default display an empty string"
 
